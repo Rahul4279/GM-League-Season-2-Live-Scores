@@ -1,0 +1,383 @@
+{% extends 'base.html' %}
+
+{% block title %}GM League Season 2 Live Scores{% endblock %}
+
+{% block content %}
+
+<!-- Live Matches Section -->
+<div class="live-matches-section mb-5">
+    <div class="section-header">
+        <h2 class="section-title">
+            <span class="live-indicator"></span>Live Matches
+        </h2>
+        <p class="section-subtitle">Real-time updates from ongoing matches</p>
+    </div>
+    
+    <div class="row">
+        <!-- Football Match -->
+        <div class="col-lg-6 col-md-6 mb-4">
+            <div class="match-card" id="football-card">
+                <div class="match-header">
+                    <div class="sport-icon">
+                        <i class="fas fa-futbol"></i>
+                    </div>
+                    <div class="match-info">
+                        <h3 class="match-title">Football</h3>
+                        <div class="match-status">
+                            <span class="live-indicator" id="football-live-indicator" style="display: {{ 'inline-block' if scores['Football']['is_live'] else 'none' }};"></span>
+                            <span class="status-badge {{ 'live' if scores['Football']['is_live'] else 'off' }}" id="football-live-badge">
+                                {{ 'LIVE' if scores['Football']['is_live'] else 'OFF' }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="match-score" id="football">
+                    {{ scores['Football']['score'] if scores['Football']['score'] else 'No live match' }}
+                </div>
+                <div class="match-footer">
+                    <span class="match-time">
+                        <i class="fas fa-clock"></i>
+                        <span id="football-status">{{ 'Live Match' if scores['Football']['is_live'] else 'Match Ended' }}</span>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Kabaddi Match -->
+        <div class="col-lg-6 col-md-6 mb-4">
+            <div class="match-card" id="kabaddi-card">
+                <div class="match-header">
+                    <div class="sport-icon">
+                        <i class="fas fa-running"></i>
+                    </div>
+                    <div class="match-info">
+                        <h3 class="match-title">Kabaddi</h3>
+                        <div class="match-status">
+                            <span class="live-indicator" id="kabaddi-live-indicator" style="display: {{ 'inline-block' if scores['Kabaddi']['is_live'] else 'none' }};"></span>
+                            <span class="status-badge {{ 'live' if scores['Kabaddi']['is_live'] else 'off' }}" id="kabaddi-live-badge">
+                                {{ 'LIVE' if scores['Kabaddi']['is_live'] else 'OFF' }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="match-score" id="kabaddi">
+                    {{ scores['Kabaddi']['score'] if scores['Kabaddi']['score'] else 'No live match' }}
+                </div>
+                <div class="match-footer">
+                    <span class="match-time">
+                        <i class="fas fa-clock"></i>
+                        <span id="kabaddi-status">{{ 'Live Match' if scores['Kabaddi']['is_live'] else 'Match Ended' }}</span>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Basketball Match -->
+        <div class="col-lg-6 col-md-6 mb-4">
+            <div class="match-card" id="basketball-card">
+                <div class="match-header">
+                    <div class="sport-icon">
+                        <i class="fas fa-basketball-ball"></i>
+                    </div>
+                    <div class="match-info">
+                        <h3 class="match-title">Basketball</h3>
+                        <div class="match-status">
+                            <span class="live-indicator" id="basketball-live-indicator" style="display: {{ 'inline-block' if scores['Basketball']['is_live'] else 'none' }};"></span>
+                            <span class="status-badge {{ 'live' if scores['Basketball']['is_live'] else 'off' }}" id="basketball-live-badge">
+                                {{ 'LIVE' if scores['Basketball']['is_live'] else 'OFF' }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="match-score" id="basketball">
+                    {{ scores['Basketball']['score'] if scores['Basketball']['score'] else 'No live match' }}
+                </div>
+                <div class="match-footer">
+                    <span class="match-time">
+                        <i class="fas fa-clock"></i>
+                        <span id="basketball-status">{{ 'Live Match' if scores['Basketball']['is_live'] else 'Match Ended' }}</span>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Badminton Match -->
+        <div class="col-lg-6 col-md-6 mb-4">
+            <div class="match-card" id="badminton-card">
+                <div class="match-header">
+                    <div class="sport-icon">
+                        <i class="fas fa-table-tennis"></i>
+                    </div>
+                    <div class="match-info">
+                        <h3 class="match-title">Badminton</h3>
+                        <div class="match-status">
+                            <span class="live-indicator" id="badminton-live-indicator" style="display: {{ 'inline-block' if scores['Badminton']['is_live'] else 'none' }};"></span>
+                            <span class="status-badge {{ 'live' if scores['Badminton']['is_live'] else 'off' }}" id="badminton-live-badge">
+                                {{ 'LIVE' if scores['Badminton']['is_live'] else 'OFF' }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="match-score" id="badminton">
+                    {{ scores['Badminton']['score'] if scores['Badminton']['score'] else 'No live match' }}
+                </div>
+                <div class="match-footer">
+                    <span class="match-time">
+                        <i class="fas fa-clock"></i>
+                        <span id="badminton-status">{{ 'Live Match' if scores['Badminton']['is_live'] else 'Match Ended' }}</span>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Leaderboard Section -->
+<div class="leaderboard-section">
+    <h2 class="leaderboard-title">
+        <i class="fas fa-trophy me-3"></i>Leaderboard
+    </h2>
+    
+    <!-- Sport Selection Dropdown -->
+    <div class="row mb-4">
+        <div class="col-md-6 mx-auto">
+            <div class="form-group">
+                <label for="sport-select" class="form-label">Select Sport</label>
+                <select class="form-control" id="sport-select" onchange="loadLeaderboard()">
+                    <option value="">All Sports</option>
+                    <option value="Football">Football</option>
+                    <option value="Kabaddi">Kabaddi</option>
+                    <option value="Basketball">Basketball</option>
+                    <option value="Badminton">Badminton</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Leaderboard Content -->
+    <div id="leaderboard-content">
+        <div class="row">
+            <div class="col-md-6 col-lg-3 mb-3">
+                <div class="leaderboard-card">
+                    <div class="team-rank">#1 Team Alpha</div>
+                    <div class="team-score">Football - 15 Points</div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3 mb-3">
+                <div class="leaderboard-card">
+                    <div class="team-rank">#2 Team Beta</div>
+                    <div class="team-score">Football - 12 Points</div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3 mb-3">
+                <div class="leaderboard-card">
+                    <div class="team-rank">#3 Team Gamma</div>
+                    <div class="team-score">Basketball - 28 Points</div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3 mb-3">
+                <div class="leaderboard-card">
+                    <div class="team-rank">#4 Team Delta</div>
+                    <div class="team-score">Kabaddi - 35 Points</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- PATRON Section -->
+<div class="committee-section">
+    <h2 class="committee-title">PATRON</h2>
+    <div class="row">
+        <div class="col-md-6 col-lg-4 mb-3">
+            <div class="committee-member">
+                <div class="member-name">G.M. Lingaraju</div>
+                <div class="member-role">Chancellor</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ADVISORY COMMITTEE Section -->
+<div class="committee-section">
+    <h2 class="committee-title">ADVISORY COMMITTEE</h2>
+    <div class="row">
+        <div class="col-md-6 col-lg-4 mb-3">
+            <div class="committee-member">
+                <div class="member-name">Dr. S.R. Shankapal</div>
+                <div class="member-role">Vice Chancellor</div>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-4 mb-3">
+            <div class="committee-member">
+                <div class="member-name">Dr. H.D. Maheshappa</div>
+                <div class="member-role">Pro-Vice Chancellor</div>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-4 mb-3">
+            <div class="committee-member">
+                <div class="member-name">Dr. Sunil Kumar B.S</div>
+                <div class="member-role">Registrar</div>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-4 mb-3">
+            <div class="committee-member">
+                <div class="member-name">Dr. Kiran Kumar H S</div>
+                <div class="member-role">Director - SA</div>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-4 mb-3">
+            <div class="committee-member">
+                <div class="member-name">Ajjaiah G B</div>
+                <div class="member-role">Director - PE</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Team Section -->
+<div class="committee-section">
+    <h2 class="committee-title">Team</h2>
+    <div class="row">
+        <div class="col-md-6 col-lg-4 mb-3">
+            <div class="committee-member">
+                <div class="member-name">Gurushankar AS</div>
+                <div class="member-role">Sports Secretary</div>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-4 mb-3">
+            <div class="committee-member">
+                <div class="member-name">Kumar M</div>
+                <div class="member-role">Sports Secretary</div>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-4 mb-3">
+            <div class="committee-member">
+                <div class="member-name">Abhiram Girish Naik</div>
+                <div class="member-role">Technical Lead</div>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-4 mb-3">
+            <div class="committee-member">
+                <div class="member-name">Yashaswini D S </div>
+                <div class="member-role">Technical Lead</div>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-4 mb-3">
+            <div class="committee-member">
+                <div class="member-name">Rahul R Gadgimata</div>
+                <div class="member-role">Technical Lead</div>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-4 mb-3">
+            <div class="committee-member">
+                <div class="member-name">Sudarshana V D</div>
+                <div class="member-role">Core Member</div>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-4 mb-3">
+            <div class="committee-member">
+                <div class="member-name">Prajwal Jana</div>
+                <div class="member-role">Core Member</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Footer -->
+<div class="footer-section">
+    <div class="footer-content">
+        <p class="footer-text">
+            <span class="trophy-icon">🏆</span> GM League Season 2
+        </p>
+        <p class="footer-copyright">
+            © 2025 GM University. All rights reserved. | Season 2 - Where Legends Are Born
+        </p>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+// Handle live status updates
+socket.on('update_live_status', function(data) {
+    const game = data.game.toLowerCase();
+    const isLive = data.is_live;
+    
+    // Update live indicator
+    const indicator = document.getElementById(`${game}-live-indicator`);
+    const badge = document.getElementById(`${game}-live-badge`);
+    const status = document.getElementById(`${game}-status`);
+    
+    if (indicator && badge && status) {
+        if (isLive) {
+            indicator.style.display = 'inline-block';
+            badge.textContent = 'LIVE';
+            badge.className = 'status-badge live';
+            status.textContent = 'Live Match';
+        } else {
+            indicator.style.display = 'none';
+            badge.textContent = 'OFF';
+            badge.className = 'status-badge off';
+            status.textContent = 'Match Ended';
+        }
+    }
+});
+
+// Update the existing score update handler to include live status
+socket.on('update_score', function(data) {
+    const scoreElement = document.getElementById(data.game.toLowerCase());
+    if (scoreElement) {
+        scoreElement.textContent = data.score_data;
+        scoreElement.parentElement.classList.add('update-animation');
+        setTimeout(() => {
+            scoreElement.parentElement.classList.remove('update-animation');
+        }, 500);
+    }
+});
+
+// Leaderboard functionality
+function loadLeaderboard() {
+    const selectedSport = document.getElementById('sport-select').value;
+    
+    // Fetch leaderboard data from server
+    fetch(`/api/leaderboard${selectedSport ? '?sport=' + selectedSport : ''}`)
+        .then(response => response.json())
+        .then(data => {
+            updateLeaderboardDisplay(data);
+        })
+        .catch(error => {
+            console.error('Error loading leaderboard:', error);
+        });
+}
+
+function updateLeaderboardDisplay(data) {
+    const container = document.getElementById('leaderboard-content');
+    
+    if (data.length === 0) {
+        container.innerHTML = '<div class="text-center"><p>No teams found for this sport.</p></div>';
+        return;
+    }
+    
+    let html = '<div class="row">';
+    data.forEach((team, index) => {
+        html += `
+            <div class="col-md-6 col-lg-3 mb-3">
+                <div class="leaderboard-card">
+                    <div class="team-rank">#${index + 1} ${team.name}</div>
+                    <div class="team-score">${team.sport} - ${team.points} Points</div>
+                </div>
+            </div>
+        `;
+    });
+    html += '</div>';
+    
+    container.innerHTML = html;
+}
+
+// Load leaderboard on page load
+document.addEventListener('DOMContentLoaded', function() {
+    loadLeaderboard();
+});
+</script>
+{% endblock %}

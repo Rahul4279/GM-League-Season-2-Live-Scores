@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}GM League Season 2 Live Scores{% endblock %}</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <style>
+        :root {
+            --primary-maroon: #4a1717;
+            --primary-gold: #d4a017;
+            --secondary-gold: #f1c453;
+            --background-dark: #f0e9e9;
+            --text-light: #f5f5f5;
+            --white: #ffffff;
+            --dark-overlay: rgba(74, 23, 23, 0.8);
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.12);
+            
+            /* Admin Dashboard Colors (Light Modern Theme) */
+            --admin-primary: #ffffff;
+            --admin-secondary: #f8fafc;
+            --admin-accent: #3b82f6;
+            --admin-gold: #f59e0b;
+            --admin-success: #10b981;
+            --admin-danger: #ef4444;
+            --admin-warning: #f59e0b;
+            --admin-info: #06b6d4;
+            --admin-text: #1e293b;
+            --admin-border: #e2e8f0;
+        }
+        
+        body {
+            background: var(--background-dark);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--primary-maroon);
+        }
+        
+        /* Beautiful Header Design */
+        .navbar {
+            background: linear-gradient(135deg, var(--primary-maroon) 0%, var(--dark-overlay) 100%) !important;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            border-bottom: 3px solid var(--primary-gold);
+            padding: 15px 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .navbar::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent 30%, rgba(212, 160, 23, 0.1) 50%, transparent 70%);
+            animation: shimmer 3s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        .navbar-brand {
+            color: var(--primary-gold) !important;
+            font-weight: bold;
+            font-size: 1.8rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            position: relative;
+            z-index: 2;
+        }
+        
+        .navbar-brand .trophy-icon {
+            font-size: 2rem;
+            margin-right: 10px;
+            animation: bounce 2s infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+        
+        .nav-link {
+            color: var(--text-light) !important;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            position: relative;
+            z-index: 2;
+            margin: 0 10px;
+            padding: 8px 16px !important;
+            border-radius: 20px;
+        }
+        
+        .nav-link:hover {
+            color: var(--primary-gold) !important;
+            background: rgba(212, 160, 23, 0.1);
+            transform: translateY(-2px);
+        }
+        
+        .nav-link i {
+            margin-right: 5px;
+            font-size: 1.1rem;
+        }
+        
+        .main-container {
+            background: var(--white);
+            border-radius: 20px;
+            box-shadow: var(--shadow-md);
+            margin: 20px auto;
+            padding: 30px;
+            border: 2px solid var(--primary-gold);
+        }
+        
+        /* Hero Section */
+        .hero-section {
+            background: linear-gradient(135deg, var(--primary-maroon) 0%, var(--dark-overlay) 100%);
+            border-radius: 20px;
+            padding: 60px 30px;
+            margin-bottom: 40px;
+            border: 3px solid var(--primary-gold);
+            color: var(--text-light);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(212, 160, 23, 0.1) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+        }
+        
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+        
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: bold;
+            color: var(--primary-gold);
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        
+        .hero-subtitle {
+            font-size: 1.5rem;
+            color: var(--text-light);
+            margin-bottom: 40px;
+        }
+        
+        .trophy-icon {
+            font-size: 4rem;
+            margin-right: 20px;
+        }
+        
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            flex-wrap: wrap;
+        }
+        
+        .stat-item {
+            text-align: center;
+            background: rgba(212, 160, 23, 0.1);
+            padding: 20px;
+            border-radius: 15px;
+            border: 1px solid rgba(212, 160, 23, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .stat-item:hover {
+            transform: translateY(-5px);
+            background: rgba(212, 160, 23, 0.2);
+        }
+        
+        .stat-number {
+            display: block;
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--primary-gold);
+        }
+        
+        .stat-label {
+            font-size: 1rem;
+            color: var(--text-light);
+        }
+        
+        /* Section Headers */
+        .section-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--primary-maroon);
+            margin-bottom: 15px;
+        }
+        
+        .section-subtitle {
+            font-size: 1.2rem;
+            color: var(--primary-maroon);
+            opacity: 0.8;
+        }
+        
+        /* Match Cards */
+        .match-card {
+            background: linear-gradient(135deg, var(--primary-maroon) 0%, var(--dark-overlay) 100%);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 15px 0;
+            box-shadow: var(--shadow-md);
+            transition: all 0.3s ease;
+            border: 2px solid var(--primary-gold);
+            color: var(--text-light);
+        }
+        
+        .match-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+            border-color: var(--secondary-gold);
+        }
+        
+        .match-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .sport-icon {
+            font-size: 2rem;
+            color: var(--primary-gold);
+            margin-right: 15px;
+        }
+        
+        .match-info {
+            flex: 1;
+        }
+        
+        .match-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--text-light);
+            margin: 0;
+        }
+        
+        .match-status {
+            display: flex;
+            align-items: center;
+            margin-top: 5px;
+        }
+        
+        .status-badge {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        
+        .status-badge.live {
+            background-color: #00ff88;
+            color: var(--primary-maroon);
+        }
+        
+        .status-badge.off {
+            background-color: #666;
+            color: var(--text-light);
+        }
+        
+        .match-score {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary-gold);
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .match-footer {
+            text-align: center;
+        }
+        
+        .match-time {
+            color: var(--text-light);
+            opacity: 0.8;
+        }
+        
+        /* Leaderboard Section */
+        .leaderboard-section {
+            background: var(--white);
+            border-radius: 15px;
+            padding: 40px;
+            margin: 40px 0;
+            box-shadow: var(--shadow-sm);
+            border: 2px solid var(--primary-gold);
+        }
+        
+        .leaderboard-title {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary-maroon);
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 3px solid var(--primary-gold);
+            padding-bottom: 15px;
+        }
+        
+        .leaderboard-card {
+            background: linear-gradient(135deg, var(--primary-maroon) 0%, var(--dark-overlay) 100%);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+            color: var(--text-light);
+            border: 1px solid var(--primary-gold);
+            transition: all 0.3s ease;
+        }
+        
+        .leaderboard-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .team-rank {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary-gold);
+            margin-bottom: 5px;
+        }
+        
+        .team-score {
+            font-size: 1rem;
+            color: var(--text-light);
+            opacity: 0.9;
+        }
+        
+        /* Committee Section */
+        .committee-section {
+            background: var(--white);
+            border-radius: 15px;
+            padding: 40px;
+            margin: 40px 0;
+            box-shadow: var(--shadow-sm);
+            border: 2px solid var(--primary-gold);
+        }
+        
+        .committee-title {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary-maroon);
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 3px solid var(--primary-gold);
+            padding-bottom: 15px;
+        }
+        
+        .committee-member {
+            background: linear-gradient(135deg, var(--primary-maroon) 0%, var(--dark-overlay) 100%);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+            text-align: center;
+            color: var(--text-light);
+            border: 1px solid var(--primary-gold);
+            transition: all 0.3s ease;
+        }
+        
+        .committee-member:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .member-name {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--primary-gold);
+            margin-bottom: 5px;
+        }
+        
+        .member-role {
+            font-size: 1rem;
+            color: var(--text-light);
+            opacity: 0.9;
+        }
+        
+        /* Footer */
+        .footer-section {
+            margin-top: 60px;
+            text-align: center;
+            padding: 30px 0;
+            border-top: 3px solid var(--primary-gold);
+            background: var(--primary-maroon);
+            color: var(--text-light);
+            border-radius: 20px;
+        }
+        
+        .footer-text {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary-gold);
+            margin-bottom: 10px;
+        }
+        
+        .footer-copyright {
+            color: var(--text-light);
+            opacity: 0.8;
+        }
+        
+        /* Live Indicator */
+        .live-indicator {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            background-color: #ff4757;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+            margin-right: 8px;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+        
+        .update-animation {
+            animation: scoreUpdate 0.5s ease-in-out;
+        }
+        
+        @keyframes scoreUpdate {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); background-color: var(--primary-gold); }
+            100% { transform: scale(1); }
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .hero-stats {
+                gap: 20px;
+            }
+            
+            .stat-number {
+                font-size: 2rem;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+        }
+        
+        /* Admin Dashboard Styles - Light Modern Theme */
+        .admin-page {
+            background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+            min-height: 100vh;
+            padding: 20px 0;
+        }
+        
+        .admin-page .main-container {
+            background: var(--admin-primary);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            border: 2px solid var(--admin-border);
+        }
+        
+        .admin-page .stat-card {
+            background: linear-gradient(135deg, var(--admin-accent) 0%, #60a5fa 100%);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            border: 2px solid var(--admin-accent);
+            transition: all 0.4s ease;
+            color: var(--admin-primary);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.15);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .admin-page .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        .admin-page .stat-card:hover::before {
+            left: 100%;
+        }
+        
+        .admin-page .stat-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            border-color: var(--admin-warning);
+            box-shadow: 0 15px 35px rgba(59, 130, 246, 0.25);
+        }
+        
+        .admin-page .stat-icon {
+            font-size: 3rem;
+            color: var(--admin-primary);
+            margin-bottom: 20px;
+        }
+        
+        .admin-page .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--admin-primary);
+            margin-bottom: 10px;
+        }
+        
+        .admin-page .stat-label {
+            color: var(--admin-primary);
+            font-size: 1.1rem;
+            font-weight: 500;
+            opacity: 0.9;
+        }
+        
+        .admin-page .admin-section-card {
+            background: var(--admin-primary);
+            border-radius: 20px;
+            border: 2px solid var(--admin-border);
+            margin-bottom: 30px;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+        }
+        
+        .admin-page .admin-section-card .card-header {
+            background: linear-gradient(135deg, var(--admin-accent) 0%, #60a5fa 100%);
+            border-bottom: 2px solid var(--admin-accent);
+            padding: 25px;
+        }
+        
+        .admin-page .admin-section-card .card-header h5 {
+            color: var(--admin-primary);
+            margin: 0;
+            font-weight: bold;
+            font-size: 1.3rem;
+        }
+        
+        .admin-page .admin-section-card .card-body {
+            padding: 35px;
+        }
+        
+        .admin-page .form-control {
+            background: var(--admin-secondary);
+            border: 2px solid var(--admin-border);
+            border-radius: 12px;
+            color: var(--admin-text);
+            padding: 15px 18px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .admin-page .form-control:focus {
+            background: var(--admin-primary);
+            border-color: var(--admin-accent);
+            box-shadow: 0 0 0 0.3rem rgba(59, 130, 246, 0.25);
+            color: var(--admin-text);
+            transform: translateY(-2px);
+        }
+        
+        .admin-page .form-control::placeholder {
+            color: rgba(30, 41, 59, 0.6);
+        }
+        
+        .admin-page .form-label {
+            color: var(--admin-text);
+            font-weight: 600;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+        
+        .admin-page .btn-warning {
+            background: linear-gradient(135deg, var(--admin-gold) 0%, var(--admin-warning) 100%);
+            color: var(--admin-primary);
+            border: none;
+            border-radius: 12px;
+            padding: 15px 30px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        }
+        
+        .admin-page .btn-warning:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(251, 191, 36, 0.4);
+            color: var(--admin-primary);
+        }
+        
+        .admin-page .btn-outline-warning {
+            border: 3px solid var(--admin-gold);
+            color: var(--admin-gold);
+            background: transparent;
+            border-radius: 12px;
+            padding: 12px 25px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+        
+        .admin-page .btn-outline-warning:hover {
+            background: var(--admin-gold);
+            color: var(--admin-primary);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(251, 191, 36, 0.3);
+        }
+        
+        .admin-page .btn-outline-danger {
+            border: 3px solid var(--admin-danger);
+            color: var(--admin-danger);
+            background: transparent;
+            border-radius: 12px;
+            padding: 12px 25px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+        
+        .admin-page .btn-outline-danger:hover {
+            background: var(--admin-danger);
+            color: var(--text-light);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(239, 68, 68, 0.3);
+        }
+        
+        .admin-page .btn-outline-info {
+            border: 3px solid var(--admin-info);
+            color: var(--admin-info);
+            background: transparent;
+            border-radius: 12px;
+            padding: 12px 25px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+        
+        .admin-page .btn-outline-info:hover {
+            background: var(--admin-info);
+            color: var(--text-light);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(6, 182, 212, 0.3);
+        }
+        
+        .admin-page .btn-outline-primary {
+            border: 3px solid var(--admin-accent);
+            color: var(--admin-accent);
+            background: transparent;
+            border-radius: 12px;
+            padding: 12px 25px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+        
+        .admin-page .btn-outline-primary:hover {
+            background: var(--admin-accent);
+            color: var(--admin-primary);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3);
+        }
+        
+        /* Table styles for admin */
+        .admin-page .table {
+            background: var(--admin-primary);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+        
+        .admin-page .table thead th {
+            background: var(--admin-accent);
+            color: var(--admin-primary);
+            border: none;
+            font-weight: 600;
+            padding: 15px;
+        }
+        
+        .admin-page .table tbody td {
+            border: none;
+            border-bottom: 1px solid var(--admin-border);
+            padding: 12px 15px;
+            vertical-align: middle;
+        }
+        
+        .admin-page .table tbody tr:hover {
+            background: var(--admin-secondary);
+        }
+        
+        /* Card styles for current scores */
+        .admin-page .card {
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+        }
+        
+        .admin-page .card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+        
+        .admin-page .card-header {
+            border-bottom: 1px solid var(--admin-border);
+            font-weight: 600;
+        }
+        
+        .admin-page .card-footer {
+            background: var(--admin-secondary);
+            border-top: 1px solid var(--admin-border);
+        }
+        
+        .admin-page .alert {
+            border-radius: 15px;
+            border: none;
+            margin-bottom: 20px;
+            padding: 15px 20px;
+            font-weight: 500;
+        }
+        
+        .admin-page .alert-success {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(16, 185, 129, 0.2) 100%);
+            color: var(--admin-success);
+            border: 2px solid rgba(16, 185, 129, 0.3);
+        }
+        
+        .admin-page .alert-danger {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(239, 68, 68, 0.2) 100%);
+            color: var(--admin-danger);
+            border: 2px solid rgba(239, 68, 68, 0.3);
+        }
+        
+        .admin-page .alert-info {
+            background: linear-gradient(135deg, rgba(251, 191, 36, 0.1) 0%, rgba(251, 191, 36, 0.2) 100%);
+            color: var(--admin-warning);
+            border: 2px solid rgba(251, 191, 36, 0.3);
+        }
+        
+        /* Dropdown styles for admin */
+        .admin-page .dropdown-menu {
+            background: linear-gradient(135deg, var(--admin-secondary) 0%, var(--admin-primary) 100%);
+            border: 2px solid var(--admin-gold);
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+        
+        .admin-page .dropdown-item {
+            color: var(--text-light);
+            padding: 12px 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .admin-page .dropdown-item:hover {
+            background: rgba(251, 191, 36, 0.2);
+            color: var(--admin-gold);
+            transform: translateX(5px);
+        }
+    </style>
+    
+    <!-- SocketIO -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.js"></script>
+    
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="{{ url_for('index') }}">
+                <span class="trophy-icon">🏆</span>GM League Season 2 Live Scores
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('index') }}">
+                            <i class="fas fa-home me-1"></i>Home
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="leaderboardDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-trophy me-1"></i>Leaderboard
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="leaderboardDropdown">
+                            <li><a class="dropdown-item" href="#" onclick="loadLeaderboard('')">
+                                <i class="fas fa-list me-2"></i>All Sports
+                            </a></li>
+                            <li><a class="dropdown-item" href="#" onclick="loadLeaderboard('Football')">
+                                <i class="fas fa-futbol me-2"></i>Football
+                            </a></li>
+                            <li><a class="dropdown-item" href="#" onclick="loadLeaderboard('Basketball')">
+                                <i class="fas fa-basketball-ball me-2"></i>Basketball
+                            </a></li>
+                            <li><a class="dropdown-item" href="#" onclick="loadLeaderboard('Kabaddi')">
+                                <i class="fas fa-running me-2"></i>Kabaddi
+                            </a></li>
+                            <li><a class="dropdown-item" href="#" onclick="loadLeaderboard('Badminton')">
+                                <i class="fas fa-table-tennis me-2"></i>Badminton
+                            </a></li>
+                        </ul>
+                    </li>
+                    {% if current_user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('admin') }}">
+                                <i class="fas fa-cog me-1"></i>Admin
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('logout') }}">
+                                <i class="fas fa-sign-out-alt me-1"></i>Logout
+                            </a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('login') }}">
+                                <i class="fas fa-sign-in-alt me-1"></i>Login
+                            </a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="main-container">
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-info alert-dismissible fade show" role="alert">
+                            <i class="fas fa-info-circle me-2"></i>{{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            
+            {% block content %}{% endblock %}
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Leaderboard Modal -->
+    <div class="modal fade" id="leaderboardModal" tabindex="-1" aria-labelledby="leaderboardModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="leaderboardModalLabel">
+                        <i class="fas fa-trophy me-2"></i>Leaderboard
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="leaderboardContent">
+                        <div class="text-center">
+                            <div class="spinner-border text-warning" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- SocketIO Connection -->
+    <script>
+        const socket = io();
+        
+        socket.on('connect', function() {
+            console.log('Connected to server');
+        });
+        
+        socket.on('update_score', function(data) {
+            const scoreElement = document.getElementById(data.game.toLowerCase());
+            if (scoreElement) {
+                scoreElement.textContent = data.score_data;
+                scoreElement.parentElement.classList.add('update-animation');
+                setTimeout(() => {
+                    scoreElement.parentElement.classList.remove('update-animation');
+                }, 500);
+            }
+        });
+        
+        // Leaderboard functionality
+        function loadLeaderboard(sport = '') {
+            const modal = new bootstrap.Modal(document.getElementById('leaderboardModal'));
+            modal.show();
+            
+            const content = document.getElementById('leaderboardContent');
+            content.innerHTML = '<div class="text-center"><div class="spinner-border text-warning" role="status"><span class="visually-hidden">Loading...</span></div></div>';
+            
+            const url = sport ? `/api/leaderboard?sport=${encodeURIComponent(sport)}` : '/api/leaderboard';
+            
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    let html = '<div class="table-responsive">';
+                    html += '<table class="table table-hover">';
+                    html += '<thead class="table-dark">';
+                    html += '<tr><th>Rank</th><th>Team</th><th>Sport</th><th>Points</th></tr>';
+                    html += '</thead><tbody>';
+                    
+                    data.forEach((team, index) => {
+                        const rank = index + 1;
+                        const rankIcon = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : `${rank}.`;
+                        
+                        html += `<tr>
+                            <td><strong>${rankIcon}</strong></td>
+                            <td><strong>${team.name}</strong></td>
+                            <td><span class="badge bg-primary">${team.sport}</span></td>
+                            <td><span class="badge bg-success">${team.points}</span></td>
+                        </tr>`;
+                    });
+                    
+                    html += '</tbody></table></div>';
+                    content.innerHTML = html;
+                })
+                .catch(error => {
+                    content.innerHTML = '<div class="alert alert-danger">Error loading leaderboard data.</div>';
+                    console.error('Error:', error);
+                });
+        }
+    </script>
+    
+    {% block extra_scripts %}{% endblock %}
+</body>
+</html>
