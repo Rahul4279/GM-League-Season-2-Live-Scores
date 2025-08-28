@@ -1,0 +1,42 @@
+[
+  {
+    "name": "Team Alpha",
+    "sport": "Football",
+    "points": 15
+  },
+  {
+    "name": "Team Beta",
+    "sport": "Football",
+    "points": 12
+  },
+  {
+    "name": "Team Gamma",
+    "sport": "Basketball",
+    "points": 28
+  },
+  {
+    "name": "Team Echo",
+    "sport": "Badminton",
+    "points": 18
+  },
+  {
+    "name": "Team Foxtrot",
+    "sport": "Football",
+    "points": 10
+  },
+  {
+    "name": "Team Golf",
+    "sport": "Basketball",
+    "points": 22
+  },
+  {
+    "name": "Team Hotel",
+    "sport": "Kabaddi",
+    "points": 30
+  },
+  {
+    "name": "yashuu",
+    "sport": "Football",
+    "points": 28
+  }
+]
